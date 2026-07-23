@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>RAPVERSE V7.8 FINAL</title>
+<title>RAPVERSE V7.9 FINAL</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{background:#0A0A0A;color:#fff;font-family:'Segoe UI',Arial;padding:20px 15px 80px 15px;}
@@ -24,7 +24,7 @@ label{color:#FFD700;font-weight:bold;display:block;margin-top:10px;font-size:14p
 </head>
 <body>
 <div class="container">
-<h1>RAP<span>VERSE</span> V7.8</h1>
+<h1>RAP<span>VERSE</span> V7.9</h1>
 <div id="loginBox" class="card"><h3>Connexion</h3><input type="email" id="email"><input type="password" id="password"><button class="btn" onclick="signup()">S'INSCRIRE +5 CRÉDITS</button><button class="btn" onclick="login()">SE CONNECTER</button></div>
 <div id="appBox" class="hidden">
   <div class="card"><p class="credits">💎 Crédits: <span id="credits">5</span>/5</p></div>
@@ -34,53 +34,7 @@ label{color:#FFD700;font-weight:bold;display:block;margin-top:10px;font-size:14p
     <div class="card">
       <label>STYLE MUSICAL - 50+ CHOIX</label>
       <select id="style">
-        <option value="rap camerounais">RAP CAMEROUNAIS</option>
-        <option value="rap francais">RAP FRANÇAIS</option>
-        <option value="rap us">RAP US / TRAP</option>
-        <option value="rap melodique">RAP MÉLODIQUE</option>
-        <option value="drill">DRILL</option>
-        <option value="afrobeats">AFROBEATS</option>
-        <option value="bikutsi">BIKUTSI</option>
-        <option value="coupé décalé">COUPÉ DÉCALÉ</option>
-        <option value="makossa">MAKOSSA</option>
-        <option value="zouk">ZOUK</option>
-        <option value="dancehall">DANCEHALL</option>
-        <option value="reggae">REGGAE</option>
-        <option value="hip hop old school">HIP HOP OLD SCHOOL</option>
-        <option value="boom bap">BOOM BAP</option>
-        <option value="rnb">R&B</option>
-        <option value="soul">SOUL</option>
-        <option value="gospel">GOSPEL</option>
-        <option value="pop">POP</option>
-        <option value="rock">ROCK</option>
-        <option value="afro pop">AFRO POP</option>
-        <option value="piano">AMAPIANO</option>
-        <option value="gqom">GQOM</option>
-        <option value="shatta">SHATTA</option>
-        <option value="ndombolo">NDOMBOLO</option>
-        <option value="soukous">SOUKOUS</option>
-        <option value="highlife">HIGHLIFE</option>
-        <option value="afro trap">AFRO TRAP</option>
-        <option value="electro">ELECTRO</option>
-        <option value="house">HOUSE</option>
-        <option value="afro house">AFRO HOUSE</option>
-        <option value="latino">LATINO / REGGAETON</option>
-        <option value="jazz">JAZZ</option>
-        <option value="lofi">LOFI</option>
-        <option value="phonk">PHONK</option>
-        <option value="hyperpop">HYPERPOP</option>
-        <option value="instrumental orchestral">ORCHESTRAL</option>
-        <option value="cinematic">CINÉMATIQUE</option>
-        <option value="trap africain">TRAP AFRICAIN</option>
-        <option value="rap conscient">RAP CONSCIENT</option>
-        <option value="rap love">RAP LOVE</option>
-        <option value="rap gangsta">RAP GANGSTA</option>
-        <option value="comédie musicale">COMÉDIE MUSICALE</option>
-        <option value="chanson française">CHANSON FRANÇAISE</option>
-        <option value="mbalax">MBALAX</option>
-        <option value="zouglou">ZOUGLou</option>
-        <option value="bongo flava">BONGO FLAVA</option>
-        <option value="gospel rap">GOSPEL RAP</option>
+        <option value="rap camerounais">RAP CAMEROUNAIS</option><option value="afrobeats">AFROBEATS</option><option value="bikutsi">BIKUTSI</option><option value="rap francais">RAP FRANÇAIS</option><option value="rap us">RAP US / TRAP</option><option value="drill">DRILL</option><option value="piano">AMAPIANO</option><option value="dancehall">DANCEHALL</option><option value="rnb">R&B</option><option value="gospel">GOSPEL</option><option value="pop">POP</option><option value="rock">ROCK</option><option value="lofi">LOFI</option><option value="phonk">PHONK</option>
       </select>
       <label>TYPE DE VOIX</label>
       <select id="voice"><option value="male">VOIX MASCULINE</option><option value="female">VOIX FÉMININE</option></select>
@@ -123,13 +77,10 @@ async function generate(){
   const finalPrompt = `${lyrics}\n\nDescription: ${prompt}. Style: ${document.getElementById('style').value}. Voice: ${document.getElementById('voice').value}. ${document.getElementById('instrumental').checked? 'with instrumental' : 'a cappella'}`;
   
   try {
-    const response = await fetch("https://api.replicate.com/v1/predictions", {
+    const response = await fetch("/.netlify/functions/generate", {
       method: "POST",
-      headers: { 
-        "Authorization": `Token ${window.env?.REPLICATE_API_KEY || 'r8_0ZJgjNFPfELRMTBy0cSWqK3tJCTU9Ar0nwgJA'}`,
-        "Content-Type": "application/json" 
-      },
-      body: JSON.stringify({ version: MODEL_VERSION, input: { prompt: finalPrompt } })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ version: MODEL_VERSION, prompt: finalPrompt })
     });
     const prediction = await response.json(); 
     if(prediction.detail) throw new Error(prediction.detail);
@@ -152,7 +103,7 @@ async function pollPrediction(url){
   let attempts = 0;
   while(attempts < 30){
     attempts++;
-    const res = await fetch(url, { headers: { "Authorization": `Token ${window.env?.REPLICATE_API_KEY || 'r8_0ZJgjNFPfELRMTBy0cSWqK3tJCTU9Ar0nwgJA'}` } });
+    const res = await fetch(url, { headers: {} });
     const data = await res.json(); 
     document.getElementById('status').innerText = `IA compose... ${attempts*4}s`;
     if(data.status === "succeeded") return data; 
@@ -164,4 +115,4 @@ async function pollPrediction(url){
 if(user) showApp();
 </script>
 </body>
-</html>
+  </html>
