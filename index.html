@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>RAPVERSE V7.4 STABLE</title>
+<title>RAPVERSE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{background:#0A0A0A;color:#fff;font-family:'Segoe UI',Arial;padding:20px 15px 80px 15px;}
@@ -26,58 +26,22 @@ audio{width:100%;margin-top:8px;}
 </head>
 <body>
 <div class="container">
-
 <h1>RAP<span>VERSE</span></h1>
-
-<div id="loginBox" class="card">
-  <h3>Connexion / Inscription</h3>
-  <input type="email" id="email" placeholder="Ton email">
-  <input type="password" id="password" placeholder="Mot de passe">
-  <button class="btn" onclick="signup()">S'INSCRIRE +5 CRÉDITS</button>
-  <button class="btn" onclick="login()">SE CONNECTER</button>
-</div>
-
+<div id="loginBox" class="card"><h3>Connexion</h3><input type="email" id="email"><input type="password" id="password"><button class="btn" onclick="signup()">S'INSCRIRE +5 CRÉDITS</button><button class="btn" onclick="login()">SE CONNECTER</button></div>
 <div id="appBox" class="hidden">
   <div class="card"><p class="credits">💎 Crédits: <span id="credits">5</span>/5</p></div>
-
   <div id="createBox">
-    <div class="card">
-      <label>Titre</label><input type="text" id="title" placeholder="Ex: Stade de France">
-      <label>Description</label><input type="text" id="prompt" placeholder="Ex: Rap camerounais motivant">
-    </div>
-    <div class="card">
-      <label>Paroles / Lyrics</label><textarea id="lyrics"></textarea>
-    </div>
-    <div class="card">
-      <label>STYLE</label><select id="style"><option value="rap camerounais">RAP CAMEROUNAIS</option><option value="rap melodique">RAP MÉLODIQUE</option><option value="trap">TRAP</option><option value="afrobeats">AFROBEATS</option></select>
-      <label>VOIX</label><select id="voice"><option value="male">MASCULINE</option><option value="female">FÉMININE</option></select>
-      <input type="checkbox" id="instrumental" checked><label for="instrumental">Générer avec Instrumental</label>
-    </div>
-    <div class="card">
-      <button class="btn" id="genBtn" onclick="generate()">✨ GÉNÉRER LA MUSIQUE -1 CRÉDIT</button>
-      <div id="loadingArea" class="hidden">
-        <div class="progress-bar"><div id="progressFill" class="progress-fill">0%</div></div>
-        <p id="status" style="text-align:center;"></p>
-      </div>
-    </div>
+    <div class="card"><label>Titre</label><input type="text" id="title"><label>Description</label><input type="text" id="prompt"></div>
+    <div class="card"><label>Paroles</label><textarea id="lyrics"></textarea></div>
+    <div class="card"><label>STYLE</label><select id="style"><option value="rap camerounais">RAP CAMEROUNAIS</option></select><label>VOIX</label><select id="voice"><option value="male">MASCULINE</option><option value="female">FÉMININE</option></select><input type="checkbox" id="instrumental" checked><label>Générer avec Instrumental</label></div>
+    <div class="card"><button class="btn" id="genBtn" onclick="generate()">✨ GÉNÉRER LA MUSIQUE -1 CRÉDIT</button><div id="loadingArea" class="hidden"><div class="progress-bar"><div id="progressFill" class="progress-fill">0%</div></div><p id="status"></p></div></div>
   </div>
-
-  <div id="playlistBox" class="hidden">
-    <div class="card"><h3>📀 MA PLAYLIST</h3><div id="playlist"></div><button class="btn" onclick="showCreate()">⬅️ RETOUR</button></div>
-  </div>
-
-  <div class="card" style="background:transparent;border:none;">
-    <button class="btn btn-blue" onclick="showPlaylist()">📀 VOIR MA PLAYLIST</button>
-    <button class="btn-small" onclick="logout()">Se déconnecter</button>
-  </div>
-
+  <div id="playlistBox" class="hidden"><div class="card"><h3>📀 MA PLAYLIST</h3><div id="playlist"></div><button class="btn" onclick="showCreate()">⬅️ RETOUR</button></div></div>
+  <div class="card" style="background:transparent;border:none;"><button class="btn btn-blue" onclick="showPlaylist()">📀 VOIR MA PLAYLIST</button><button class="btn-small" onclick="logout()">Se déconnecter</button></div>
 </div>
-
 </div>
-
 <script>
-const REPLICATE_API_KEY = "r8_0ZJgjNFPfELRMTBy0cSWqK3tJCTU9Ar0nwgJA";
-const MODEL_VERSION = "stability-ai/suno:v3.5"; // NOUVEAU NOM DU MODÈLE
+const MODEL_VERSION = "stability-ai/suno:v3.5";
 let user = JSON.parse(localStorage.getItem('rapverseUser')) || null;
 let credits = parseInt(localStorage.getItem('rapverseCredits')) || 5;
 let songs = JSON.parse(localStorage.getItem('rapverseSongs')) || [];
@@ -113,17 +77,15 @@ async function generate(){
   const finalPrompt = `${lyrics}\n\nDescription: ${prompt}. Style: ${document.getElementById('style').value}. Voice: ${document.getElementById('voice').value}. ${document.getElementById('instrumental').checked? 'with instrumental' : 'a cappella'}`;
 
   try {
-    const response = await fetch("/api/predictions", {
+    const response = await fetch("/api/predictions", { // PLUS DE HEADER AUTH ICI
       method: "POST",
-      headers: { "Authorization": `Token ${REPLICATE_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ version: MODEL_VERSION, input: { prompt: finalPrompt } }) // ON ENLÈVE DURATION
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ version: MODEL_VERSION, input: { prompt: finalPrompt } })
     });
     const prediction = await response.json(); 
-    
-    if(!prediction.urls ||!prediction.urls.get) throw new Error(prediction.detail || "Erreur API Replicate"); // GESTION ERREUR
-
+    if(!prediction.urls ||!prediction.urls.get) throw new Error(prediction.detail || "Erreur API");
     const result = await pollPrediction(prediction.urls.get);
-    const audioUrl = result.output; // LE OUTPUT EST DIRECTEMENT L'URL
+    const audioUrl = result.output;
     
     clearInterval(progressInterval); updateProgress(100);
     songs.unshift({title, url: audioUrl, style: document.getElementById('style').value, date: Date.now()}); 
@@ -143,16 +105,16 @@ async function pollPrediction(url){
   let attempts = 0;
   while(attempts < 30){
     attempts++;
-    const res = await fetch(url.replace("https://api.replicate.com/v1", "/api"), { headers: { "Authorization": `Token ${REPLICATE_API_KEY}` } });
+    const res = await fetch(url.replace("https://api.replicate.com/v1", "/api"), { headers: {} }); // PLUS DE HEADER
     const data = await res.json(); 
     document.getElementById('status').innerText = `IA compose... ${attempts*4}s`;
     if(data.status === "succeeded") return data; 
     if(data.status === "failed") throw new Error(data.error);
     await new Promise(r => setTimeout(r, 4000));
   }
-  throw new Error("Timeout - L'IA met trop de temps");
+  throw new Error("Timeout");
 }
 if(user) showApp();
 </script>
 </body>
-</html>
+  </html>
