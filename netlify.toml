@@ -1,10 +1,3 @@
-[[redirects]]
-  from = "/api/*"
-  to = "https://api.replicate.com/v1/:splat"
-  status = 200
-  force = true
-  headers = {Authorization = "Token :REPLICATE_API_KEY"}
-
 [[headers]]
   for = "/*"
   [headers.values]
