@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RAPVERSE</title>
+<style>
+body{background:#000;color:#fff;text-align:center;font-family:Arial;padding:50px;}
+h1{color:#FFD700;font-size:40px;}
+p{color:#aaa;}
+.btn{background:#FFD700;color:#000;border:none;padding:20px 40px;font-size:20px;border-radius:50px;font-weight:bold;cursor:pointer;margin:20px;}
+#box{background:#111;padding:30px;border-radius:15px;margin-top:30px;display:none;}
+textarea{width:90%;height:100px;background:#222;color:#fff;border:1px solid #FFD700;border-radius:10px;padding:10px;}
+</style>
+</head>
+<body>
+
+<h1>RAP<span style="color:#00BFFF">VERSE</span></h1>
+<p>Crée un son avec TA voix en 15 secondes</p>
+
+<button class="btn" id="startBtn">🎤 SCANNER MA VOIX</button>
+
+<div id="box">
+  <p>1. Enregistre 15s</p>
+  <button class="btn" id="recBtn">ENREGISTRER</button>
+  <p id="timer"></p>
+  <audio id="player" controls></audio>
+  
+  <p>2. Écris tes paroles</p>
+  <textarea id="text" placeholder="Ex: Je suis le roi de Yaoundé..."></textarea>
+  
+  <p>3. Clique et attends 40s</p>
+  <button class="btn" id="genBtn">GÉNÉRER MON SON</button>
+</div>
+
+<script>
+// ICI ON VA METTRE LA MAGIE PLUS TARD
+document.getElementById('startBtn').onclick = () => {
+  document.getElementById('box').style.display = 'block';
+}
+alert("Page prête ! Prochaine étape: brancher le micro");
+</script>
+
+</body>
+</html>
