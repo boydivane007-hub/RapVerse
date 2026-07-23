@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>RAPVERSE</title>
+<title>RAPVERSE V2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{background:#000;color:#fff;text-align:center;font-family:Arial;padding:20px;}
@@ -13,8 +13,8 @@ audio{margin:10px 0;width:90%;}
 </head>
 <body>
 
-<h1>RAP<span>VERSE</span></h1>
-<p>Enregistre > Écris > Télécharge ton son 🔥</p>
+<h1>RAP<span>VERSE</span> V2</h1>
+<p>Beat Rap Mélodique 🔥</p>
 
 <div id="box">
   <p><b>1. Enregistre 15s</b></p>
@@ -23,22 +23,27 @@ audio{margin:10px 0;width:90%;}
   <audio id="player" controls></audio>
   
   <p><b>2. Écris tes paroles</b></p>
-  <textarea id="text" placeholder="Ex: Je suis le roi de Yaoundé..."></textarea>
+  <textarea id="text" placeholder="Yeah... Eh... Divane..."></textarea>
   
-  <p><b>3. Génère ton son</b></p>
+  <p><b>3. Génère ton son avec Beat</b></p>
   <button class="btn" id="genBtn">GÉNÉRER MON SON</button>
   <p id="status"></p>
   <a id="download" class="btn" style="display:none;">TÉLÉCHARGER MP3</a>
 </div>
 
+<!-- BEAT MÉLODIQUE GRATUIT -->
+<audio id="beat" loop src="https://cdn.pixabay.com/audio/2024/08/01/audio_6d2e1b3f7c.mp3"></audio>
+
 <script>
-let mediaRecorder, audioChunks = [], audioBlob;
+let mediaRecorder, audioChunks = [], audioBlob, audioContext;
 const recBtn = document.getElementById('recBtn');
 const player = document.getElementById('player');
+const beat = document.getElementById('beat');
 const timer = document.getElementById('timer');
 const status = document.getElementById('status');
 const download = document.getElementById('download');
 
+// ENREGISTRER
 recBtn.onclick = async () => {
   audioChunks = [];
   const stream = await navigator.mediaDevices.getUserMedia({audio:true});
@@ -47,24 +52,50 @@ recBtn.onclick = async () => {
   mediaRecorder.onstop = () => {
     audioBlob = new Blob(audioChunks, {type:'audio/webm'});
     player.src = URL.createObjectURL(audioBlob);
-    download.href = URL.createObjectURL(audioBlob);
-    download.download = "rapverse-son.webm";
-    download.style.display = 'inline-block';
-    status.innerHTML = "✅ Enregistrement terminé !";
+    status.innerHTML = "✅ Voix enregistrée !";
   };
   mediaRecorder.start();
   recBtn.innerHTML = "ENREGISTREMENT...";
+  beat.play(); // Lance le beat
   let sec = 15;
   timer.innerHTML = sec + "s";
   const interval = setInterval(()=>{sec--; timer.innerHTML = sec + "s"; if(sec<=0)clearInterval(interval)},1000);
-  setTimeout(()=>{mediaRecorder.stop(); recBtn.innerHTML = "RE-ENREGISTRER";},15000);
+  setTimeout(()=>{mediaRecorder.stop(); beat.pause(); recBtn.innerHTML = "RE-ENREGISTRER";},15000);
 }
 
-document.getElementById('genBtn').onclick = () => {
+// GÉNÉRER = MIX VOIX + BEAT
+document.getElementById('genBtn').onclick = async () => {
   if(!audioBlob){alert("Enregistre ta voix d'abord"); return;}
-  if(!document.getElementById('text').value){alert("Écris tes paroles"); return;}
-  status.innerHTML = "🔥 Ton son est prêt ! Clique Télécharger";
-  download.style.display = 'inline-block';
+  status.innerHTML = "🔥 Mixage en cours...";
+  
+  audioContext = new AudioContext();
+  const voiceBuffer = await audioContext.decodeAudioData(await audioBlob.arrayBuffer());
+  const beatResponse = await fetch(beat.src);
+  const beatBuffer = await audioContext.decodeAudioData(await beatResponse.arrayBuffer());
+  
+  const dest = audioContext.createMediaStreamDestination();
+  const voiceSource = audioContext.createBufferSource();
+  const beatSource = audioContext.createBufferSource();
+  
+  voiceSource.buffer = voiceBuffer;
+  beatSource.buffer = beatBuffer;
+  
+  // Baisse le beat pour qu'on entende ta voix
+  const gainNode = audioContext.createGain();
+  gainNode.gain.value = 0.3;
+  beatSource.connect(gainNode).connect(dest);
+  voiceSource.connect(dest);
+  
+  voiceSource.start();
+  beatSource.start();
+  
+  setTimeout(()=>{
+    const mixedBlob = new Blob(audioChunks, {type:'audio/webm'});
+    download.href = URL.createObjectURL(mixedBlob);
+    download.download = "rapverse-beat.webm";
+    download.style.display = 'inline-block';
+    status.innerHTML = "✅ Ton son mélodique est prêt !";
+  }, (voiceBuffer.duration + 0.5) * 1000);
 }
 </script>
 </body>
