@@ -1,0 +1,11 @@
+[[redirects]]
+  from = "/api/*"
+  to = "https://api.replicate.com/v1/:splat"
+  status = 200
+  force = true
+  headers = {X-CSRF-Token = "rapverse"}
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
