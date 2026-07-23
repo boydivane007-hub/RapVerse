@@ -3,7 +3,7 @@
   to = "https://api.replicate.com/v1/:splat"
   status = 200
   force = true
-  headers = {Authorization = "Token r8_0ZJgjNFPfELRMTBy0cSWqK3tJCTU9Ar0nwgJA"}
+  headers = {Authorization = "Token :REPLICATE_API_KEY"}
 
 [[headers]]
   for = "/*"
