@@ -2,42 +2,68 @@
 <html>
 <head>
 <title>RAPVERSE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{background:#000;color:#fff;text-align:center;font-family:Arial;padding:50px;}
-h1{color:#FFD700;font-size:40px;}
-p{color:#aaa;}
-.btn{background:#FFD700;color:#000;border:none;padding:20px 40px;font-size:20px;border-radius:50px;font-weight:bold;cursor:pointer;margin:20px;}
-#box{background:#111;padding:30px;border-radius:15px;margin-top:30px;display:none;}
-textarea{width:90%;height:100px;background:#222;color:#fff;border:1px solid #FFD700;border-radius:10px;padding:10px;}
+body{background:#000;color:#fff;text-align:center;font-family:Arial;padding:20px;}
+h1{color:#FFD700;font-size:40px;} h1 span{color:#00BFFF;}
+.btn{background:#FFD700;color:#000;border:none;padding:15px 30px;font-size:18px;border-radius:50px;font-weight:bold;cursor:pointer;margin:10px;}
+#box{margin-top:20px;}
+textarea{width:90%;height:100px;background:#222;color:#fff;border:1px solid #FFD700;border-radius:10px;padding:10px;font-size:16px;}
+audio{margin:10px 0;}
 </style>
 </head>
 <body>
 
-<h1>RAP<span style="color:#00BFFF">VERSE</span></h1>
+<h1>RAP<span>VERSE</span></h1>
 <p>Crée un son avec TA voix en 15 secondes</p>
 
 <button class="btn" id="startBtn">🎤 SCANNER MA VOIX</button>
 
 <div id="box">
-  <p>1. Enregistre 15s</p>
+  <p><b>1. Enregistre 15s</b></p>
   <button class="btn" id="recBtn">ENREGISTRER</button>
   <p id="timer"></p>
-  <audio id="player" controls></audio>
+  <audio id="player" controls style="display:none;"></audio>
   
-  <p>2. Écris tes paroles</p>
+  <p><b>2. Ecris tes paroles</b></p>
   <textarea id="text" placeholder="Ex: Je suis le roi de Yaoundé..."></textarea>
   
-  <p>3. Clique et attends 40s</p>
+  <p><b>3. Clique et attends 40s</b></p>
   <button class="btn" id="genBtn">GÉNÉRER MON SON</button>
+  <p id="status"></p>
 </div>
 
 <script>
-// ICI ON VA METTRE LA MAGIE PLUS TARD
-document.getElementById('startBtn').onclick = () => {
-  document.getElementById('box').style.display = 'block';
-}
-alert("Page prête ! Prochaine étape: brancher le micro");
-</script>
+let mediaRecorder, audioChunks = [], audioBlob;
+const recBtn = document.getElementById('recBtn');
+const player = document.getElementById('player');
+const timer = document.getElementById('timer');
+const status = document.getElementById('status');
 
+recBtn.onclick = async () => {
+  audioChunks = [];
+  const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+  mediaRecorder.onstop = () => {
+    audioBlob = new Blob(audioChunks, {type:'audio/webm'});
+    player.src = URL.createObjectURL(audioBlob);
+    player.style.display = 'block';
+  };
+  mediaRecorder.start();
+  recBtn.innerHTML = "ENREGISTREMENT...";
+  let sec = 15;
+  timer.innerHTML = sec + "s";
+  const interval = setInterval(()=>{sec--; timer.innerHTML = sec + "s"; if(sec<=0)clearInterval(interval)},1000);
+  setTimeout(()=>{mediaRecorder.stop(); recBtn.innerHTML = "RE-ENREGISTRER"; timer.innerHTML = "Terminé ✅"},15000);
+}
+
+document.getElementById('genBtn').onclick = () => {
+  if(!audioBlob){alert("Enregistre ta voix d'abord"); return;}
+  if(!document.getElementById('text').value){alert("Écris tes paroles"); return;}
+  status.innerHTML = "L'IA travaille... Patiente 40s 🔥";
+  alert("Prochaine étape: On branche ElevenLabs pour générer la vraie voix");
+}
+</script>
 </body>
 </html>
