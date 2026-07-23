@@ -6,19 +6,17 @@
 <style>
 body{background:#0A0A0A;color:#fff;font-family:'Segoe UI',Arial;padding:20px 15px 80px 15px;}
 .container{max-width:700px;margin:auto;}
-h1{color:#FFD700;text-align:center;font-size:38px;margin-bottom:5px;} h1 span{color:#00BFFF;}
+h1{color:#FFD700;text-align:center;font-size:38px;} h1 span{color:#00BFFF;}
 .card{background:#111;border:1px solid #222;border-radius:20px;padding:18px;margin:15px 0;}
 .btn{background:#FFD700;color:#000;border:none;padding:15px;font-size:17px;border-radius:50px;font-weight:bold;cursor:pointer;width:100%;margin:10px 0;}
 .btn-blue{background:#00BFFF;color:#000;}
 .btn-small{background:transparent;color:#666;border:1px solid #333;padding:10px;font-size:12px;width:auto;margin:20px auto 0 auto;display:block;}
 .btn:disabled{background:#444;}
-input,textarea,select{width:100%;background:#1A1A1A;color:#fff;border:1px solid #333;border-radius:10px;padding:12px;font-size:16px;margin:8px 0;box-sizing:border-box;}
+input,textarea,select{width:100%;background:#1A1A1A;color:#fff;border:1px solid #333;border-radius:10px;padding:12px;font-size:16px;margin:8px 0;}
 textarea#lyrics{height:220px;font-family:monospace;}
 label{color:#FFD700;font-weight:bold;display:block;margin-top:10px;font-size:14px;}
 .credits{color:#00BFFF;font-size:20px;text-align:center;font-weight:bold;}
 .hidden{display:none;}
-.song-item{background:#1A1A1A;padding:12px;border-radius:12px;margin:10px 0;}
-audio{width:100%;margin-top:8px;}
 .progress-bar{width:100%;background:#222;border-radius:10px;overflow:hidden;margin:15px 0;height:20px;}
 .progress-fill{height:100%;width:0%;background:linear-gradient(90deg, #FFD700, #00BFFF);transition: width 0.4s ease; text-align:center;color:#000;font-weight:bold;font-size:12px;line-height:20px;}
 .error{color:#FF4444;text-align:center;font-weight:bold;}
@@ -26,14 +24,68 @@ audio{width:100%;margin-top:8px;}
 </head>
 <body>
 <div class="container">
-<h1>RAP<span>VERSE</span></h1>
+<h1>RAP<span>VERSE</span> V7.7</h1>
 <div id="loginBox" class="card"><h3>Connexion</h3><input type="email" id="email"><input type="password" id="password"><button class="btn" onclick="signup()">S'INSCRIRE +5 CRÉDITS</button><button class="btn" onclick="login()">SE CONNECTER</button></div>
 <div id="appBox" class="hidden">
   <div class="card"><p class="credits">💎 Crédits: <span id="credits">5</span>/5</p></div>
   <div id="createBox">
     <div class="card"><label>Titre</label><input type="text" id="title"><label>Description</label><input type="text" id="prompt"></div>
     <div class="card"><label>Paroles</label><textarea id="lyrics"></textarea></div>
-    <div class="card"><label>STYLE</label><select id="style"><option value="rap camerounais">RAP CAMEROUNAIS</option></select><label>VOIX</label><select id="voice"><option value="male">MASCULINE</option><option value="female">FÉMININE</option></select><input type="checkbox" id="instrumental" checked><label>Générer avec Instrumental</label></div>
+    <div class="card">
+      <label>STYLE MUSICAL - 50+ CHOIX</label>
+      <select id="style">
+        <option value="rap camerounais">RAP CAMEROUNAIS</option>
+        <option value="rap francais">RAP FRANÇAIS</option>
+        <option value="rap us">RAP US / TRAP</option>
+        <option value="rap melodique">RAP MÉLODIQUE</option>
+        <option value="drill">DRILL</option>
+        <option value="afrobeats">AFROBEATS</option>
+        <option value="bikutsi">BIKUTSI</option>
+        <option value="coupé décalé">COUPÉ DÉCALÉ</option>
+        <option value="makossa">MAKOSSA</option>
+        <option value="zouk">ZOUK</option>
+        <option value="dancehall">DANCEHALL</option>
+        <option value="reggae">REGGAE</option>
+        <option value="hip hop old school">HIP HOP OLD SCHOOL</option>
+        <option value="boom bap">BOOM BAP</option>
+        <option value="rnb">R&B</option>
+        <option value="soul">SOUL</option>
+        <option value="gospel">GOSPEL</option>
+        <option value="pop">POP</option>
+        <option value="rock">ROCK</option>
+        <option value="afro pop">AFRO POP</option>
+        <option value="piano">AMAPIANO</option>
+        <option value="gqom">GQOM</option>
+        <option value="shatta">SHATTA</option>
+        <option value="ndombolo">NDOMBOLO</option>
+        <option value="soukous">SOUKOUS</option>
+        <option value="highlife">HIGHLIFE</option>
+        <option value="afro trap">AFRO TRAP</option>
+        <option value="electro">ELECTRO</option>
+        <option value="house">HOUSE</option>
+        <option value="afro house">AFRO HOUSE</option>
+        <option value="latino">LATINO / REGGAETON</option>
+        <option value="jazz">JAZZ</option>
+        <option value="lofi">LOFI</option>
+        <option value="phonk">PHONK</option>
+        <option value="hyperpop">HYPERPOP</option>
+        <option value="instrumental orchestral">ORCHESTRAL</option>
+        <option value="cinematic">CINÉMATIQUE</option>
+        <option value="trap africain">TRAP AFRICAIN</option>
+        <option value="rap conscient">RAP CONSCIENT</option>
+        <option value="rap love">RAP LOVE</option>
+        <option value="rap gangsta">RAP GANGSTA</option>
+        <option value="comédie musicale">COMÉDIE MUSICALE</option>
+        <option value="chanson française">CHANSON FRANÇAISE</option>
+        <option value="mbalax">MBALAX</option>
+        <option value="zouglou">ZOUGLou</option>
+        <option value="bongo flava">BONGO FLAVA</option>
+        <option value="gospel rap">GOSPEL RAP</option>
+      </select>
+      <label>TYPE DE VOIX</label>
+      <select id="voice"><option value="male">VOIX MASCULINE</option><option value="female">VOIX FÉMININE</option></select>
+      <div style="display:flex;align-items:center;gap:10px;"><input type="checkbox" id="instrumental" checked><label for="instrumental" style="margin:0;">Générer avec Instrumental</label></div>
+    </div>
     <div class="card"><button class="btn" id="genBtn" onclick="generate()">✨ GÉNÉRER LA MUSIQUE -1 CRÉDIT</button><div id="loadingArea" class="hidden"><div class="progress-bar"><div id="progressFill" class="progress-fill">0%</div></div><p id="status"></p></div></div>
   </div>
   <div id="playlistBox" class="hidden"><div class="card"><h3>📀 MA PLAYLIST</h3><div id="playlist"></div><button class="btn" onclick="showCreate()">⬅️ RETOUR</button></div></div>
@@ -46,7 +98,6 @@ let user = JSON.parse(localStorage.getItem('rapverseUser')) || null;
 let credits = parseInt(localStorage.getItem('rapverseCredits')) || 5;
 let songs = JSON.parse(localStorage.getItem('rapverseSongs')) || [];
 let progressInterval;
-
 function showApp(){ document.getElementById('loginBox').classList.add('hidden'); document.getElementById('appBox').classList.remove('hidden'); document.getElementById('credits').innerText = credits; }
 function signup(){ user = {email:document.getElementById('email').value}; credits = 5; saveUser(); showApp(); }
 function login(){ user = {email:document.getElementById('email').value}; saveUser(); showApp(); }
@@ -54,44 +105,31 @@ function logout(){ user = null; localStorage.removeItem('rapverseUser'); locatio
 function saveUser(){ localStorage.setItem('rapverseUser', JSON.stringify(user)); localStorage.setItem('rapverseCredits', credits); }
 function showPlaylist(){ document.getElementById('createBox').classList.add('hidden'); document.getElementById('playlistBox').classList.remove('hidden'); renderPlaylist(); }
 function showCreate(){ document.getElementById('playlistBox').classList.add('hidden'); document.getElementById('createBox').classList.remove('hidden'); }
-function renderPlaylist(){ const playlistDiv = document.getElementById('playlist'); if(songs.length === 0){ playlistDiv.innerHTML = "<p>Aucun son</p>"; return; } playlistDiv.innerHTML = songs.map((s,i)=>`<div class="song-item"><b>${s.title}</b><br><audio controls src="${s.url}"></audio><a href="${s.url}" download="${s.title}.mp3">⬇️</a></div>`).join(''); }
-
+function renderPlaylist(){ const playlistDiv = document.getElementById('playlist'); if(songs.length === 0){ playlistDiv.innerHTML = "<p>Aucun son</p>"; return; } playlistDiv.innerHTML = songs.map((s,i)=>`<div class="song-item"><b>${s.title}</b><br><small>${s.style}</small><audio controls src="${s.url}"></audio><a href="${s.url}" download="${s.title}.mp3">⬇️</a></div>`).join(''); }
 const lastReset = localStorage.getItem('rapverseLastReset'); const today = new Date().toDateString(); if(lastReset!== today){ credits = 5; localStorage.setItem('rapverseCredits', 5); localStorage.setItem('rapverseLastReset', today); }
-
 function updateProgress(percent){ document.getElementById('progressFill').style.width = percent + '%'; document.getElementById('progressFill').innerText = percent + '%'; }
-
 async function generate(){
   if(credits <= 0) return alert("Plus de crédits");
   const title = document.getElementById('title').value; const prompt = document.getElementById('prompt').value; const lyrics = document.getElementById('lyrics').value;
   if(!title ||!prompt ||!lyrics) return alert("Remplis tout");
-
   credits--; saveUser(); document.getElementById('credits').innerText = credits;
   document.getElementById('genBtn').disabled = true;
   document.getElementById('loadingArea').classList.remove('hidden');
   document.getElementById('status').className = "";
   updateProgress(0);
-  
   let progress = 0;
   progressInterval = setInterval(()=>{ if(progress < 90){ progress += 1.2; updateProgress(Math.floor(progress)); } }, 1000);
-
   const finalPrompt = `${lyrics}\n\nDescription: ${prompt}. Style: ${document.getElementById('style').value}. Voice: ${document.getElementById('voice').value}. ${document.getElementById('instrumental').checked? 'with instrumental' : 'a cappella'}`;
-
   try {
-    const response = await fetch("/api/predictions", { // PLUS DE HEADER AUTH ICI
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ version: MODEL_VERSION, input: { prompt: finalPrompt } })
-    });
+    const response = await fetch("/api/predictions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ version: MODEL_VERSION, input: { prompt: finalPrompt } }) });
     const prediction = await response.json(); 
     if(!prediction.urls ||!prediction.urls.get) throw new Error(prediction.detail || "Erreur API");
     const result = await pollPrediction(prediction.urls.get);
     const audioUrl = result.output;
-    
     clearInterval(progressInterval); updateProgress(100);
     songs.unshift({title, url: audioUrl, style: document.getElementById('style').value, date: Date.now()}); 
     localStorage.setItem('rapverseSongs', JSON.stringify(songs));
     document.getElementById('status').innerHTML = `✅ "${title}" prêt!`;
-    
   } catch(e) { 
     clearInterval(progressInterval);
     document.getElementById('status').innerText = "❌ Erreur: " + e.message;
@@ -100,12 +138,11 @@ async function generate(){
   }
   document.getElementById('genBtn').disabled = false;
 }
-
 async function pollPrediction(url){
   let attempts = 0;
   while(attempts < 30){
     attempts++;
-    const res = await fetch(url.replace("https://api.replicate.com/v1", "/api"), { headers: {} }); // PLUS DE HEADER
+    const res = await fetch(url.replace("https://api.replicate.com/v1", "/api"), { headers: {} });
     const data = await res.json(); 
     document.getElementById('status').innerText = `IA compose... ${attempts*4}s`;
     if(data.status === "succeeded") return data; 
@@ -117,4 +154,4 @@ async function pollPrediction(url){
 if(user) showApp();
 </script>
 </body>
-  </html>
+          </html>
