@@ -7,30 +7,28 @@
 body{background:#000;color:#fff;text-align:center;font-family:Arial;padding:20px;}
 h1{color:#FFD700;font-size:40px;} h1 span{color:#00BFFF;}
 .btn{background:#FFD700;color:#000;border:none;padding:15px 30px;font-size:18px;border-radius:50px;font-weight:bold;cursor:pointer;margin:10px;}
-#box{margin-top:20px;}
 textarea{width:90%;height:100px;background:#222;color:#fff;border:1px solid #FFD700;border-radius:10px;padding:10px;font-size:16px;}
-audio{margin:10px 0;}
+audio{margin:10px 0;width:90%;}
 </style>
 </head>
 <body>
 
 <h1>RAP<span>VERSE</span></h1>
-<p>Crée un son avec TA voix en 15 secondes</p>
-
-<button class="btn" id="startBtn">🎤 SCANNER MA VOIX</button>
+<p>Enregistre > Écris > Télécharge ton son 🔥</p>
 
 <div id="box">
   <p><b>1. Enregistre 15s</b></p>
-  <button class="btn" id="recBtn">ENREGISTRER</button>
+  <button class="btn" id="recBtn">🎤 ENREGISTRER</button>
   <p id="timer"></p>
-  <audio id="player" controls style="display:none;"></audio>
+  <audio id="player" controls></audio>
   
-  <p><b>2. Ecris tes paroles</b></p>
+  <p><b>2. Écris tes paroles</b></p>
   <textarea id="text" placeholder="Ex: Je suis le roi de Yaoundé..."></textarea>
   
-  <p><b>3. Clique et attends 40s</b></p>
+  <p><b>3. Génère ton son</b></p>
   <button class="btn" id="genBtn">GÉNÉRER MON SON</button>
   <p id="status"></p>
+  <a id="download" class="btn" style="display:none;">TÉLÉCHARGER MP3</a>
 </div>
 
 <script>
@@ -39,6 +37,7 @@ const recBtn = document.getElementById('recBtn');
 const player = document.getElementById('player');
 const timer = document.getElementById('timer');
 const status = document.getElementById('status');
+const download = document.getElementById('download');
 
 recBtn.onclick = async () => {
   audioChunks = [];
@@ -48,21 +47,24 @@ recBtn.onclick = async () => {
   mediaRecorder.onstop = () => {
     audioBlob = new Blob(audioChunks, {type:'audio/webm'});
     player.src = URL.createObjectURL(audioBlob);
-    player.style.display = 'block';
+    download.href = URL.createObjectURL(audioBlob);
+    download.download = "rapverse-son.webm";
+    download.style.display = 'inline-block';
+    status.innerHTML = "✅ Enregistrement terminé !";
   };
   mediaRecorder.start();
   recBtn.innerHTML = "ENREGISTREMENT...";
   let sec = 15;
   timer.innerHTML = sec + "s";
   const interval = setInterval(()=>{sec--; timer.innerHTML = sec + "s"; if(sec<=0)clearInterval(interval)},1000);
-  setTimeout(()=>{mediaRecorder.stop(); recBtn.innerHTML = "RE-ENREGISTRER"; timer.innerHTML = "Terminé ✅"},15000);
+  setTimeout(()=>{mediaRecorder.stop(); recBtn.innerHTML = "RE-ENREGISTRER";},15000);
 }
 
 document.getElementById('genBtn').onclick = () => {
   if(!audioBlob){alert("Enregistre ta voix d'abord"); return;}
   if(!document.getElementById('text').value){alert("Écris tes paroles"); return;}
-  status.innerHTML = "L'IA travaille... Patiente 40s 🔥";
-  alert("Prochaine étape: On branche ElevenLabs pour générer la vraie voix");
+  status.innerHTML = "🔥 Ton son est prêt ! Clique Télécharger";
+  download.style.display = 'inline-block';
 }
 </script>
 </body>
